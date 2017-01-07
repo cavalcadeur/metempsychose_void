@@ -51,17 +51,15 @@ function action(t){
                     }
                 }
                 else if (h.grap == 3){
-                    if (h.vx == 0 && h.vy == 0){
-                        var gx = h.x + (vecteurs[h.sens][1] * (h.grapD/10));
-                        var gy = h.y + (vecteurs[h.sens][0] * (h.grapD/10));
-                        if (isSolid(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0]) == true){
-                            h.grap = 0;
-                            hookShots.splice(h.nGrap,1);
-                            if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
-                            heros[n].nGrap = -1;
-                        }
-                        else move(h.sens,n,1);
+                    var gx = h.x + (vecteurs[h.sens][1] * (h.grapD/10));
+                    var gy = h.y + (vecteurs[h.sens][0] * (h.grapD/10));
+                    if (isSolid(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0]) == true){
+                        h.grap = 0;
+                        hookShots.splice(h.nGrap,1);
+                        if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
+                        heros[n].nGrap = -1;
                     }
+                    else move(h.sens,n,1);
                 }
                 if (h.grap != 0){
                     var hx = h.x + h.vx/50;
@@ -78,8 +76,8 @@ function action(t){
             }
             else if (h.vx == 0 && h.vy == 0 && figer == 0){
                 var supress = 1;
-                if (objNiveau[h.y][h.x][0] != "" && isSolid(h.x,h.y) == false){
-                    var truc = objNiveau[h.y][h.x];
+                if (objNiveau[Math.round(h.y)][Math.round(h.x)][0] != "" && isSolid(Math.round(h.y),Math.round(h.x)) == false){
+                    var truc = objNiveau[Math.round(h.y)][Math.round(h.x)];
                     if (truc[0] == "rubisVert"){
                         h.rubis += 1;
                         supress = 0;
@@ -129,14 +127,14 @@ function action(t){
                         supress = 0;
                     }
                     else if (truc[0] == "avaleur1"){
-                        if (h.z == niveau[h.y][h.x]){
+                        if (h.z == niveau[Math.round(h.y)][Math.round(h.x)]){
                             h.stun = 10020;
-                            objNiveau[h.y][h.x][0] = "avaleur2";
+                            objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "avaleur2";
                         }
                     }
                     if (supress == 0){
-                        if (truc.length > 1) objNiveau[h.y][h.x].splice(0,1);
-                        else objNiveau[h.y][h.x][0] = "";
+                        if (truc.length > 1) objNiveau[Math.round(h.y)][Math.round(h.x)].splice(0,1);
+                        else objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "";
                     }
                 }
 
@@ -151,21 +149,21 @@ function action(t){
                     }
                 }
                 if (h.imgUp != 1){
-                    if (1 == keys[controlKeys[n][1]]) move(1,n,0);
-                    else if (1 == keys[controlKeys[n][3]]) move(3,n,0);
-                    else if (1 == keys[controlKeys[n][0]]) move(0,n,0);
-                    else if (1 == keys[controlKeys[n][2]]) move(2,n,0);
+                    if (1 == keys[controlKeys[n][1]]) moveV(1,n,0);
+                    if (1 == keys[controlKeys[n][3]]) moveV(3,n,0);
+                    if (1 == keys[controlKeys[n][0]]) moveV(0,n,0);
+                    if (1 == keys[controlKeys[n][2]]) moveV(2,n,0);
+                    if (heros[n].Vx > 0) move(1,n,0);
+                    else if (heros[n].Vx < 0) move(3,n,0);
+                    if (heros[n].Vy > 0) move(2,n,0);
+                    else if (heros[n].Vy < 0) move(0,n,0);
                 }
             }
             ennemis.forEach(
                 function(e){
                     if (e.pv == 0) return;
-                    if (h.x + Math.round(h.vx/50) == Math.round(e.x) && h.y + Math.round(h.vy/50) == Math.round(e.y)){
-                        if (h.vx > 0) var Sens = 1;
-                        else if (h.vx < 0) var Sens = 3;
-                        else if (h.vy < 0) var Sens = 0;
-                        else if (h.vy < 0) var Sens = 2;
-                        else var Sens = e.sens;
+                    if (Math.round(h.x) == Math.round(e.x) && Math.round(h.y) == Math.round(e.y)){
+                        var Sens = e.sens;
                         if (e.img == "main") {
                             goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
                             particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
@@ -175,13 +173,11 @@ function action(t){
                 }
             );
             if (h.plane == 1){
-                if (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0])) h.g = 0.01;
+                if (h.z > niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0])) h.g = 0.01;
                 else {
                     h.g = 0;
-                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
+                    h.z = niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]);
                     h.plane = 0;
-                    h.vx = 0;
-                    h.vy = 0;
                     h.imgUp = 0;
                     h.imgN = 0;
                     if (h.z <= -1){
@@ -189,18 +185,13 @@ function action(t){
                     }
                 }
                 h.z -= h.g;
-                if (figer == 1) {}
-                else if (h.vx > 0) {h.vx += 3; }
-                else if (h.vy > 0) {h.vy += 3; }
-                else if (h.vx < 0) {h.vx -= 3; }
-                else if (h.vy < 0) {h.vy -= 3; }
 
             }
             else if (h.grap == 0){
-                if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]) && h.g < 5)) h.g += 0.05;
+                if ( (h.z > niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]) && h.g < 5)) h.g += 0.02;
                 else {
                     h.g = 0;
-                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
+                    h.z = niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]);
                     if (h.z <= -1){
                         fall(h,n);
                     }
@@ -208,18 +199,11 @@ function action(t){
                 h.z -= h.g;
             }
             if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
-            else if (h.vx > 0) {h.vx -= 5; }
-            else if (h.vy > 0) {h.vy -= 5; }
-            else if (h.vx < 0) {h.vx += 5; }
-            else if (h.vy < 0) {h.vy += 5; }
-            if (Math.abs(h.vx) < 5) h.vx = 0;
-            if (Math.abs(h.vy) < 5) h.vy = 0;
         });
-    if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
 }
 
 function fall(h,n){
-    var truc = objNiveau[h.y][h.x];
+    var truc = objNiveau[Math.round(heros[n].y)][Math.round(heros[n].x)];
     if (truc != "avaleur1" && truc != "avaleur2"){
         if (out == 1 || out == 3){
             particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
@@ -254,28 +238,25 @@ function fall(h,n){
 }
 
 function move(d,n,gg){
-    if (heros[n].stun > 0) return;
-    if (heros[n].sens != d){
-        heros[n].sens = d;
-        heros[n].delay = 3;
-        return;
-    }
-    if (heros[n].delay != 0){
-        heros[n].delay -= 1;
-        return;
-    }
     // if (gg == 0 && heros[n].plane == 0 && heros[n].g == 0){
-    if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
-        var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]];
+    var inert = [heros[n].Vx,heros[n].Vy];
+    var dx = Math.abs(heros[n].Vx) * vecteurs[d][1];
+    var dy = Math.abs(heros[n].Vy) * vecteurs[d][0];
+    var deX = Math.round(heros[n].x + dx);
+    var deY = Math.round(heros[n].y + dy);
+    heros[n].Vx = 0;
+    heros[n].Vy = 0;
+    if (deX == niveau[0].length || deX == -1 || deY == niveau.length || deY == -1) return;
+    var truc = objNiveau[deY][deX];
     if (heros[n].sens == 0){
         if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
-            teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
-            if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
+            teleport = [deY,deX];
+            if (objNiveau[deY][deX][1] == "void"){
                 goToLevel(out,"void",0,0,0,0);
             }
             else {
-                goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
-                if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][2] == 666){
+                goto = objNiveau[deY][deX][1];
+                if (objNiveau[deY][deX][2] == 666){
                     out = 1;
                     cinematicos = 2;
                     goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
@@ -295,7 +276,7 @@ function move(d,n,gg){
             }
         }
     }
-    if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] + taille(truc[0])){
+    if (heros[n].z < niveau[deY][deX] + taille(truc[0])){
         if (truc[0] == "rocher"){
             var YY = heros[n].y+vecteurs[d][0];
             var XX = heros[n].x+vecteurs[d][1];
@@ -307,16 +288,35 @@ function move(d,n,gg){
         return;
     }
     //}
-    if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
-    else if (heros[n].plane == 1 || heros[n].g != 0){
-        if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
-        if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
-    }
-    heros[n].x +=  vecteurs[d][1];
-    heros[n].y +=  vecteurs[d][0];
-    heros[n].vx += -50 * vecteurs[d][1];
-    heros[n].vy += -50 * vecteurs[d][0];
+    heros[n].x +=  dx;
+    heros[n].y +=  dy;
     if (heros[n].etat == 1 && heros[n].g == 0) {heros[n].g = -0.20; heros[n].z += 0.01;}
+    
+    if (inert[0] > 0) heros[n].Vx = inert[0] - heros[n].inertie;
+    else if (inert[0] < 0) heros[n].Vx = inert[0] + heros[n].inertie;
+    if (Math.abs(inert[0]) < heros[n].inertie) heros[n].Vx = 0;
+    if (inert[1] > 0) heros[n].Vy = inert[1] - heros[n].inertie;
+    else if (inert[1] < 0) heros[n].Vy = inert[1] + heros[n].inertie;
+    if (Math.abs(inert[1]) < heros[n].inertie) heros[n].Vy = 0;
+    
+    Painter.scrolling();
+}
+
+function moveV(d,n,gg){
+    if (heros[n].stun > 0) return;
+    if (heros[n].sens != d){
+        heros[n].sens = d;
+        heros[n].delay = 3;
+        return;
+    }
+    if (heros[n].delay != 0){
+        heros[n].delay -= 1;
+        return;
+    }
+    var dx = vecteurs[d][1] * heros[n].vitesse;
+    var dy = vecteurs[d][0] * heros[n].vitesse;
+    heros[n].Vx = dx;
+    heros[n].Vy = dy;
 }
 
 function changeArme(n){

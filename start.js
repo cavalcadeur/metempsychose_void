@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0}];
+var heros = [{"x":5,"y":4,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"inertie":0.02,"Vx":0,Vy:0,"vitesse":0.1}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -14,7 +14,7 @@ var pressurePlate = [];
 var useless = ["blank",""];
 var pots = [];
 var out = 4;
-var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(90,88,96)","rgb(72,71,77)",[20,70,10,10,30,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(170,170,170)","rgb(150,150,150)",[210,210,210,-20,-20,-20],"rgb(0,0,15)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"]];
+var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(93,58,96)","rgb(72,37,77)",[80,20,20,20,-5,-5],"rgb(42,53,108)","rgb(0,0,40)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(140,130,170)","rgb(120,110,150)",[180,180,210,-50,-50,-50],"rgb(40,40,70)","rgb(200,200,250)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"]];
 var niveau = [];
 var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0,"dev":0,"sky":0,"pencil":0};
 var alerting = 0;
@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","special","fastTravel","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3","rocher"];
+var imgArbre = ["arbre0","herbe0"];
 var nDalle = 0;
-var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
+var imgEnnemi = ["dark"];
 var mouse = [0,0];
-var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
+var editObject = [["outDoor"],["outDoor"],["outDoor"],["outDoor"],["outDoor"],["outDoor"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","rocher","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
+var editArray = {"outDoor":["rien","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -61,7 +61,7 @@ var fondInvent = new Image();
 fondInvent.src = "images/menu4.png";
 var imgCinema = [new Image,new Image];
 var cinematicos = 0;
-var sideEdit = ["monsters","sky","fireTemple","inDoor","outDoor","special","gear","loot"];
+var sideEdit = ["outDoor"];
 var sideSelect = -1;
 
 // programme
@@ -390,7 +390,6 @@ function start(){
             else if (onSea == 5) TPclick(x,y);
             else if (edition == 0) {
                 if (heros[0].invent[heros[0].objet] == "mastersword") clicSword(x,y);
-                if (heros[1].invent[heros[1].objet] == "GPS") GPS(x,y);
                 return;
             }
             if (onSea == 0){
@@ -441,7 +440,7 @@ function start(){
             keys[event.keyCode] = 1;
             Crossed.keysPress(event.keyCode);
             if (event.keyCode == 16 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
-            else if (event.keyCode == 32 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0,1);}}
+            else if (event.keyCode == 32 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
         }
     );
     document.addEventListener(
@@ -476,7 +475,7 @@ function start(){
         }
     );
     for(var i = 0;i < 17;i ++){
-        waves.push([rnd(W),rnd(H),-rnd(200) + 100]);
+        waves.push([rnd(W),rnd(H),Math.abs(80 - i * 20)]);
     }
     precharge();
 }
@@ -556,7 +555,14 @@ function draw() {
     else if (out == 4){
         waves.forEach(
             function(e,n){
-                starNiveau(e);
+                if (n < 5) preVortexNiveau(e);
+            }
+        );
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "rgb(100,100,100)";
+        waves.forEach(
+            function(e,n){
+                if (n < 5) vortexNiveau(e);
             }
         );
     }
@@ -610,8 +616,7 @@ function draw() {
             );
             heros.forEach(
                 function(h,n){
-                    if (y == h.y) drawHeros(n);
-                    if (h.vy > 0 && y == h.y + 1) drawHeros(n);
+                    if (y == Math.round(h.y)) drawHeros(n);
                 }
             );
             ennemis.forEach(
@@ -719,7 +724,7 @@ function draw() {
                         else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
                         else if (kgb.type == "excla") {drawExcla(kgb);kgb.g = 0;}
-                        else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
+                        else if (kgb.type == "quake" && kgb.n >= 0) Painter.drawQuake(kgb.n);
                         else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti,kgb.n);kgb.g = 0;}
                         else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
                         else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
@@ -730,19 +735,31 @@ function draw() {
                         else if (kgb.type == "bla") {drawBla(kgb);kgb.g = 0;}
                         else if (kgb.type == "pow") {drawPow(kgb);kgb.g = 0;}
                         else if (kgb.type == "texte") {drawTexte(kgb);kgb.g = 0;}
+                        else if (kgb.type == "aspire" && kgb.n >= 0) {drawSpire(kgb);kgb.g = 0;}
                         kgb.n += 1;
                         if (kgb.type == "flamme") kgb.alti += kgb.g/150;
                         else kgb.alti += kgb.g/50;
                         kgb.g -= 1;
                         if (kgb.n == kgb.lim) {
-                            if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
-                            else if (kgb.type == "rocher"){
-                                if (objNiveau[Math.round(kgb.y)][Math.round(kgb.x)] == [""]) objNiveau[Math.round(kgb.y)][Math.round(kgb.x)][0] =  "rocher";
-                                else {
-                                    objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(0,0,"rocher");
+                            if (kgb.re == 1){
+                                kgb.n = - 30 - rnd(6);
+                                if (kgb.type == "quake") kgb.n -= 100;
+                                else if (kgb.type == "fumeeF"){
+                                    kgb.n = -3;
+                                    kgb.x = rnd(niveau[0].length);
+                                    kgb.y = rnd(niveau.length);
                                 }
                             }
-                            particles.splice(iii,1);
+                            else{
+                                if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
+                                else if (kgb.type == "rocher"){
+                                    if (objNiveau[Math.round(kgb.y)][Math.round(kgb.x)] == [""]) objNiveau[Math.round(kgb.y)][Math.round(kgb.x)][0] =  "rocher";
+                                    else {
+                                        objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(0,0,"rocher");
+                                    }
+                                }
+                                particles.splice(iii,1);
+                            }
                         }
                     }
                 }
@@ -758,7 +775,6 @@ function draw() {
 }
 
 function drawHeros(n){
-    if (edition == 1) return;
     if (heros[n].stun > 0) {
         heros[n].stun -= 1;
         if (heros[n].stun > 10000){
@@ -778,16 +794,15 @@ function drawHeros(n){
         if (heros[n].mortal % 4 < 2)return;
     }
     var N = 0;
-    if (Math.abs(heros[n].vx + heros[n].vy)%50 >= 25 && heros[n].g == 0) N = 24;
     if (heros[n].plane == 1){
-        Painter.img(ctx,heros[n].x + heros[n].vx/50, heros[n].y + heros[n].vy/50,niveau[Math.round(heros[n].y + heros[n].vy/50)][Math.round(heros[n].x + heros[n].vx/50)],imgElement.marque);
+        Painter.img(ctx,heros[n].x, heros[n].y,niveau[Math.round(heros[n].y)][Math.round(heros[n].x)],imgElement.marque);
     }
-    Painter.img( ctx, heros[n].x + heros[n].vx/50, heros[n].y + heros[n].vy/50, heros[n].z, imgHeros[heros[n].sens + 4*n + heros[n].imgUp*8 + N] );
+    Painter.img( ctx, heros[n].x, heros[n].y, heros[n].z, imgHeros[heros[n].sens + 4*n + heros[n].imgUp*8 + N] );
     if (heros[n].invent[heros[n].objet] != "blank" && heros[n].imgUp == 0) {
-        Painter.img(ctx,heros[n].x + heros[n].vx/50,heros[n].y + heros[n].vy/50,heros[n].z,imgArme[heros[n].invent[heros[n].objet] + heros[n].sens]);
+        Painter.img(ctx,heros[n].x,heros[n].y,heros[n].z,imgArme[heros[n].invent[heros[n].objet] + heros[n].sens]);
     }
     if (heros[n].aura != ""){
-        Painter.imgScale(ctx,heros[n].x + heros[n].vx/50,heros[n].y - 1 + heros[n].vy/50,heros[n].z,heros[n].tAura/40,imgElement[heros[n].aura]);
+        Painter.imgScale(ctx,heros[n].x - 0.5,heros[n].y - 1 - 0.5,heros[n].z,heros[n].tAura/40,imgElement[heros[n].aura]);
     }
 }
 
@@ -944,7 +959,7 @@ function drawInterface(){
         }
     }
     else {
-        ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W-50,0);
+        ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W/2-25,5);
     }
     if (editPlate == 1 || editPlate == 2){
         ctx.beginPath();
@@ -956,7 +971,13 @@ function drawInterface(){
 
 function attack(n,x){
     if (edition == 1){
-        edition = 0;
+        if (editPlate == 0){
+                edition = 0;
+                casePencil = ["ah","ah"];
+                console.log(JSON.stringify(niveau));
+                console.log(JSON.stringify(objNiveau));
+                console.log(JSON.stringify(ennemis));
+        }
         return;
     }
     if (heros[n].imgUp != 0){
@@ -967,6 +988,7 @@ function attack(n,x){
         }
         return;
     }
+    if (heros[n].g == 0) {heros[n].g = -0.3; heros[n].z += 0.01;}
     if (x == 1) {
         var use = heros[0].prim;
     }
@@ -1527,31 +1549,6 @@ function hitEnnemis(n,degat,sens){
         if (degat == 0) {
             ennemis[n].img = "bossFeuDead";
             ennemis[n].v = 0;
-        }
-        else {
-            return;
-        }
-    }
-    else if (ennemis[n].img == "bossFeuDead"){
-        if (degat > 0) {
-            ennemis[n].img = "bossFeu";
-            ennemis[n].v = 0.05;
-            ennemis[n].n = 0;
-            ennemis.push({x:ennemis[n].x,y:ennemis[n].y,pv:2,img:"feu",sens:sens,z:1,g:0,v:0.05,n:0,ia:"mur",stop:0,stun:0,att:1});
-            particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
-            particles.push({n:0,type:"fumeeF",x:5,y:2,g:0,alti:0,lim:40});
-            particles.push({n:-14,type:"fumeeF",x:9,y:5,g:0,alti:0,lim:40});
-            particles.push({n:-21,type:"fumeeF",x:7,y:8,g:0,alti:0,lim:40});
-            particles.push({n:-24,type:"fumeeF",x:9,y:10,g:0,alti:0,lim:40});
-            particles.push({n:-33,type:"fumeeF",x:2,y:9,g:0,alti:0,lim:40});
-            if (ennemis[n].pv == 3){
-                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,-1,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
-            }
-            else {
-                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
-                particles.splice(0,1);
-            }
-            Painter.niveau(niveau);
         }
         else {
             return;

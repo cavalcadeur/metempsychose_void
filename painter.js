@@ -1,6 +1,6 @@
 var Painter = function() {
-    var scrollX = 300;
-    var scrollY = 190;
+    var scrollX = 430;
+    var scrollY = 240;
     var cellX = 50;  // Largeur d'une cellule.
     var cellY = 35;  // Profondeur.
     var cellZ = 30;
@@ -120,7 +120,7 @@ var Painter = function() {
         },
 
         drawQuake: function( n ) {
-			scrollX += Math.sin(n)*20;
+	    scrollX += Math.sin(n)*10;
         },
 
         drawChain: function(ctx,x,y,x2,y2,z) {
@@ -241,7 +241,7 @@ var Painter = function() {
 				
 				if (n == 1) return;
 
-                ctx.strokeStyle = "#000";
+                ctx.strokeStyle = colorSet[out][4];
                 ctx.lineWidth = 2;
                 // Tracer les lignes des plateaux.
                 var wall = walls[y][x];

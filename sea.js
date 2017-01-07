@@ -186,6 +186,21 @@ function starNiveau(e){
     }
 }
 
+function preVortexNiveau(e){
+    ctx.fillStyle = "rgb("+Math.round(e[2]/2)+","+Math.round(e[2]/2)+","+Math.round(e[2])+")";
+    ctx.beginPath();
+    ctx.ellipse(W/2 + Math.cos(e[2])*4,H/2 + Math.sin(e[2])*4,W/120*e[2] + Math.cos(e[2]/40)*50,W/120*e[2] + Math.sin(e[2]/50)*50,e[1],Math.PI,-Math.PI);
+    ctx.fill();
+}
+
+function vortexNiveau(e){
+    ctx.beginPath();
+    ctx.ellipse(W/2 + Math.cos(e[2])*2,H/2 + Math.sin(e[2])*2,W/120*e[2] + Math.cos(e[2]/40)*50,W/120*e[2] + Math.sin(e[2]/50)*50,e[1],Math.PI,-Math.PI);
+    ctx.stroke();
+    e[2] += 0.5;
+    if (e[2] % 20 == 0) e[2] -= 20;
+}
+
 function goToLevel(oo,go,x,y,x2,y2){
     boomerang.forEach(
         function(e,n){
@@ -209,12 +224,8 @@ function goToLevel(oo,go,x,y,x2,y2){
     }
     heros[0].x = x;
     heros[0].y = y;
-    heros[1].x = x2;
-    heros[1].y = y2;
     heros[0].grap = 0;
     heros[0].grapD = -1;
-    heros[1].grap = 0;
-    heros[1].grapD = -1;
     hookShots = [];
     out = oo;
     goto = go;
@@ -241,9 +252,8 @@ function goToLevel(oo,go,x,y,x2,y2){
         objNiveau = interieurs[go].obj;
     }
     onSea = 0;
-    respawnPoint = [x,y];
-    heros[0].z = niveau[heros[0].y][heros[0].x];
-    heros[1].z = niveau[heros[1].y][heros[1].x];
+    respawnPoint = [Math.round(x),Math.round(y)];
+    heros[0].z = niveau[Math.round(heros[0].y)][Math.round(heros[0].x)];
     Painter.niveau(niveau);
     Painter.scroll(0,0);
     Painter.centerScroll(x,y,0,W,H);

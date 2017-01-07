@@ -178,3 +178,13 @@ function drawExcla(truc){
     Painter.img(ctx,truc.x,truc.y,truc.alti+1.8 + truc.n/8,imgDebris.excla);
     ctx.globalAlpha = 1;
 }
+
+function drawSpire(truc){
+    ctx.fillStyle = "rgb(240,240,240)";
+    ctx.beginPath();
+    ctx.arc(W/2,H/2,W/120*truc.n,Math.PI,-Math.PI);
+    ctx.fill();
+    if (truc.n >= 100){
+        goToLevel(1,"depart",heros[0].x,heros[0].y);
+    }
+}
