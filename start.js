@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","soleil","outDoor","return"];
+var imgArbre = ["arbre0","herbe0","soleil","outDoor","return","herbe1","herbe2"];
 var nDalle = 0;
 var imgEnnemi = ["dark"];
 var mouse = [0,0];
 var editObject = [["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"]];
 var editHand = ["outDoor","outDoor","outDoor","outDoor","outDoor"];
 var editnumber = 0;
-var editArray = {"outDoor":["rien","arbre0","herbe0","return"]};
+var editArray = {"outDoor":["rien","arbre0","herbe0","herbe1","herbe2","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -816,7 +816,7 @@ function drawEnnemi(n){
     }
     else{
         if (ennemis[n].pv == 0) return;
-        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
+        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[ennemis[n].img + "0"] );
         var altitude = niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)];
         if (ennemis[n].z > altitude && ennemis[n].img != "mPierreA" && ennemis[n].img != "mPierreB") {
             ennemis[n].z -= ennemis[n].g;
@@ -827,38 +827,20 @@ function drawEnnemi(n){
             ennemis[n].z = altitude;
         }
         if (edition == 0 && figer == 0){
-            if (ennemis[n].n == Math.round(1/ennemis[n].v)){
-                if (ennemis[n].img == "feu"){
-                    try {
-                        if (niveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]] == altitude){
-                            var truc = objNiveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]][0];
-                            if (truc == "arbre0" || truc == "arbre1"){
-                                particles.push({n:0,type:"feu",x:Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1],y:Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0],g:0,alti:altitude,lim:25});
-                            }
-                        }
-                    }
-                    catch (e){
-
-                    }
-                }
-                if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
-                var sens = choseDirection(n);
-                ennemis[n].n = 0;
-                if (sens == 4){
-                    ennemis[n].stun = 1;
-                }
-                else ennemis[n].sens = sens;
+            if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
+            var sens = choseDirection(n);
+            ennemis[n].n = 0;
+            if (sens == 4){
+                ennemis[n].stun = 1;
             }
-            if (ennemis[n].stop == 0){
-                ennemis[n].n += 1;
-                if (ennemis[n].stun == 0){
-                    ennemis[n].x += vecteurs[ennemis[n].sens][1] * ennemis[n].v;
-                    ennemis[n].y += vecteurs[ennemis[n].sens][0] * ennemis[n].v;
-                }
-            }
+            else ennemis[n].sens = sens;
+        }
+        if (ennemis[n].stop == 0){
+            ennemis[n].n += 1;
         }
     }
 }
+
 
 function drawInterface(){
     if (edition == 1){
