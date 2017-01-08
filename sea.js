@@ -85,7 +85,7 @@ function waveNiveau(e){
     if (e[2] >= 200) {
         e[2] = -rnd(300)-100;
         e[0] = rnd(W);
-        e[1] = rnd(H);
+        e[1] = rnd(H/3*2)+H/3+25;
     }
     e[2] += 1;
 }
@@ -272,4 +272,10 @@ function defineTele(gg,outa){
         objNiveau[teleport[0]][teleport[1]][1] = gg;
     }
 
+}
+
+function drawCiel(){
+    ctx.fillStyle = "rgb(80,64,152)";
+    ctx.fillRect(0,0,W,H/3);
+    ctx.drawImage(imgElement.soleil,100,100);
 }

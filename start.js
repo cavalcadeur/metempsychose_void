@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0"];
+var imgArbre = ["arbre0","herbe0","soleil","outDoor","return"];
 var nDalle = 0;
 var imgEnnemi = ["dark"];
 var mouse = [0,0];
-var editObject = [["outDoor"],["outDoor"],["outDoor"],["outDoor"],["outDoor"],["outDoor"]];
-var editHand = [];
-var editnumber = 1;
-var editArray = {"outDoor":["rien","return"]};
+var editObject = [["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"]];
+var editHand = ["outDoor","outDoor","outDoor","outDoor","outDoor"];
+var editnumber = 0;
+var editArray = {"outDoor":["rien","arbre0","herbe0","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -61,7 +61,7 @@ var fondInvent = new Image();
 fondInvent.src = "images/menu4.png";
 var imgCinema = [new Image,new Image];
 var cinematicos = 0;
-var sideEdit = ["outDoor"];
+var sideEdit = ["outDoor","outDoor","outDoor","outDoor","outDoor"];
 var sideSelect = -1;
 
 // programme
@@ -460,8 +460,12 @@ function start(){
             }
             else if (event.keyCode == 65){
                 if (edition == 1){
-                    helpPencil(editHand[editnumber]);
+                    edition = 0;
+                    console.log(JSON.stringify(niveau));
+                    console.log(JSON.stringify(objNiveau));
+                    console.log(JSON.stringify(ennemis));
                 }
+                else if (edition == 0) edition = 1;
                 else if (onSea == 0){
                     onSea = 6;
                 }
@@ -517,38 +521,13 @@ function animation(){
 }
 
 function draw() {
+    drawCiel();
     ctx.fillStyle = colorSet[out][3];
-    ctx.fillRect(0,0,W,H);
+    ctx.fillRect(0,H/3,W,H);
     if (out == 1){
         waves.forEach(
             function(e){
                 waveNiveau(e);
-            }
-        );
-    }
-    else if (out == 2){
-        waves.forEach(
-            function(e){
-                lavaNiveau(e);
-            }
-        );
-        waves.forEach(
-            function(e){
-                lavaNiveauUp(e);
-            }
-        );
-    }
-    else if (out == 3){
-        waves.forEach(
-            function(e,n){
-                if (n < 7) rondNiveau(e);
-            }
-        );
-    }
-    else if (out == 5){
-        waves.forEach(
-            function(e,n){
-                if (n < 5) cloudNiveau(e,n);
             }
         );
     }
@@ -571,8 +550,7 @@ function draw() {
             e.forEach(
                 function(f,x){
                     Painter.cell( ctx, x, y, f ,0);
-                    if (objNiveau[y][x][0] == "coffre3") objetMort = 1;
-                    else if (objNiveau[y][x][0] == "main0"){
+                    if (objNiveau[y][x][0] == "main0"){
                         if (edition == 0 && figer == 0){
                             objNiveau[y][x][1] -=1;
                             if (objNiveau[y][x][1] == 0){
@@ -581,37 +559,7 @@ function draw() {
                             }
                         }
                     }
-                    if (niveau[y][x] < 0){
-                        if (isFloodable(x,y) == false){
-                            if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
-                            else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
-                            else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
-                            else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
-                        }
-                    }
-                    else{
-                        if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
-                        else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
-                        else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
-                        else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
-                    }
-                    //testTerrain(x,y,f);
-                    //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
-                    hookShots.forEach(
-                        function(omg){
-                            if (y == Math.round(omg.y) && x == Math.round(omg.x)){
-                                var rr = (omg.s * Math.PI)/2;
-                                Painter.imgBoomerang(ctx,omg.x,omg.y,omg.z,rr,imgDebris["hook"]);
-                            }
-                            omg.chaine.forEach(
-                                function(m){
-                                    if (y == Math.round(m[1]) && x == Math.ceil(m[0])){
-                                        Painter.img(ctx,m[0],m[1],omg.z,imgDebris["chaineA"]);
-                                    }
-                                }
-                            );
-                        }
-                    );
+                    Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
                 }
             );
             heros.forEach(
@@ -622,11 +570,6 @@ function draw() {
             ennemis.forEach(
                 function(a,m){
                     if (y-Math.round(a.y) == 0) drawEnnemi(m);
-                }
-            );
-            pots.forEach(
-                function(g,i){
-                    if (y == Math.round(g.y + g.n*((g.oy - g.y)/32))) drawPot(g,i);
                 }
             );
             boomerang.forEach(
@@ -793,11 +736,10 @@ function drawHeros(n){
         heros[n].mortal -= 1;
         if (heros[n].mortal % 4 < 2)return;
     }
-    var N = 0;
     if (heros[n].plane == 1){
         Painter.img(ctx,heros[n].x, heros[n].y,niveau[Math.round(heros[n].y)][Math.round(heros[n].x)],imgElement.marque);
     }
-    Painter.img( ctx, heros[n].x, heros[n].y, heros[n].z, imgHeros[heros[n].sens + 4*n + heros[n].imgUp*8 + N] );
+    Painter.img( ctx, heros[n].x, heros[n].y, heros[n].z, imgHeros[heros[n].sens + 4*n + heros[n].imgUp*8] );
     if (heros[n].invent[heros[n].objet] != "blank" && heros[n].imgUp == 0) {
         Painter.img(ctx,heros[n].x,heros[n].y,heros[n].z,imgArme[heros[n].invent[heros[n].objet] + heros[n].sens]);
     }
@@ -972,11 +914,11 @@ function drawInterface(){
 function attack(n,x){
     if (edition == 1){
         if (editPlate == 0){
-                edition = 0;
-                casePencil = ["ah","ah"];
-                console.log(JSON.stringify(niveau));
-                console.log(JSON.stringify(objNiveau));
-                console.log(JSON.stringify(ennemis));
+            edition = 0;
+            casePencil = ["ah","ah"];
+            console.log(JSON.stringify(niveau));
+            console.log(JSON.stringify(objNiveau));
+            console.log(JSON.stringify(ennemis));
         }
         return;
     }

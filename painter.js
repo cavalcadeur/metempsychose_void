@@ -1,10 +1,10 @@
 var Painter = function() {
     var scrollX = 430;
-    var scrollY = 240;
+    var scrollY = 0;
     var cellX = 50;  // Largeur d'une cellule.
-    var cellY = 35;  // Profondeur.
+    var cellY = 30;  // Profondeur.
     var cellZ = 30;
-    var cellS = 10;  // Décalage.
+    var cellS = 5;  // Décalage.
     var walls;
     var wallsVert;
 
@@ -13,7 +13,7 @@ var Painter = function() {
     }
 
     function toY( x, y, z ) {
-        return Math.floor( scrollY + y * cellY - z * cellZ);
+        return Math.floor( scrollY + H/3 + y * cellY - z * cellZ);
     }
 
     function exploMY( n ) {
@@ -112,7 +112,8 @@ var Painter = function() {
 
         centerScroll: function ( x, y , z , W , H) {
             scrollX = Math.floor(W/2 - x*cellX + y*cellS);
-            scrollY = Math.floor(H/2 - y*cellY + z*cellZ);
+            scrollY = Math.floor(H/2 - H/3 - y*cellY + z*cellZ);
+            if (scrollY < 0) scrollY = 0;
          },
         
         scrollYPlus: function(a) {
@@ -326,8 +327,8 @@ var Painter = function() {
             var y = toY(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
             if (x > W-150) scrollX = W-150-(x-scrollX);
             else if (x < 100) scrollX = 100-(x-scrollX);
-            if (y > H-100) scrollY = H-100-(y-scrollY);
-            else if (y < 150) scrollY = 150-(y-scrollY);
+            if (y > H-50) scrollY = H-50-(y-scrollY);
+            else if (y < H/3+50) scrollY = H/3+50-(y-scrollY);
         },
         drawHit: function(ctx,x,y,z,n){
             ctx.fillStyle = "rgb("+(215+n*4)+","+(100+n*10)+",45)";
