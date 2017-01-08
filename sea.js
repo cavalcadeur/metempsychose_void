@@ -275,7 +275,7 @@ function defineTele(gg,outa){
 }
 
 function drawCiel(){
-    ctx.fillStyle = "rgb(80,64,152)";
+    ctx.fillStyle = "rgb(26,74,202)";
     ctx.fillRect(0,0,W,H/3);
     ctx.drawImage(imgElement.soleil,100,100);
 }

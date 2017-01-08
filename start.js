@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":5,"y":4,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"inertie":0.02,"Vx":0,Vy:0,"vitesse":0.1}];
+var heros = [{"x":5,"y":4,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"inertie":0.02,"Vx":0,Vy:0,"vitesse":0.1,"saut":0.3}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","soleil","outDoor","return","herbe1","herbe2"];
+var imgArbre = ["arbre0","herbe0","soleil","outDoor","monsters","return","herbe1","herbe2"];
 var nDalle = 0;
-var imgEnnemi = ["dark"];
+var imgEnnemi = ["palmiste"];
 var mouse = [0,0];
-var editObject = [["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"],["outDoor","outDoor","outDoor","outDoor","outDoor"]];
-var editHand = ["outDoor","outDoor","outDoor","outDoor","outDoor"];
+var editObject = [["outDoor","outDoor","outDoor","outDoor","monsters"],["outDoor","outDoor","outDoor","outDoor","monsters"],["outDoor","outDoor","outDoor","outDoor","monsters"],["outDoor","outDoor","outDoor","outDoor","monsters"],["outDoor","outDoor","outDoor","outDoor","monsters"],["outDoor","outDoor","outDoor","outDoor","monsters"]];
+var editHand = ["outDoor","outDoor","outDoor","outDoor","monsters"];
 var editnumber = 0;
-var editArray = {"outDoor":["rien","arbre0","herbe0","herbe1","herbe2","return"]};
+var editArray = {"outDoor":["rien","arbre0","herbe0","herbe1","herbe2","return"],"monsters":["palmiste","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -61,7 +61,7 @@ var fondInvent = new Image();
 fondInvent.src = "images/menu4.png";
 var imgCinema = [new Image,new Image];
 var cinematicos = 0;
-var sideEdit = ["outDoor","outDoor","outDoor","outDoor","outDoor"];
+var sideEdit = ["outDoor","outDoor","outDoor","outDoor","monsters"];
 var sideSelect = -1;
 
 // programme
@@ -233,11 +233,11 @@ function precharge(){
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
     var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","excla","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla"];
-    var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF","maskWind"];
-    var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
-    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2"];
+    var imgInterface = ["blank"];
+    var imgRubis = ["rubisVert"];
+    var imgPNJ = ["lambda0"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle;
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*2) + imgPNJ.length + nDalle;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -327,7 +327,7 @@ function charge(){
     );
     imgEnnemi.forEach(
         function(e,i){
-            for (var j = 0;j < 4;j ++){
+            for (var j = 0;j < 2;j ++){
                 var name = e+j;
                 imgMonstre[name] = new Image();
                 imgMonstre[name].src = "images/ennemis/"+name+".png";
@@ -816,9 +816,9 @@ function drawEnnemi(n){
     }
     else{
         if (ennemis[n].pv == 0) return;
-        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[ennemis[n].img + "0"] );
+        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[String(ennemis[n].img + ennemis[n].act)] );
         var altitude = niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)];
-        if (ennemis[n].z > altitude && ennemis[n].img != "mPierreA" && ennemis[n].img != "mPierreB") {
+        if (ennemis[n].z > altitude) {
             ennemis[n].z -= ennemis[n].g;
             ennemis[n].g += 0.05;
         }
@@ -828,12 +828,7 @@ function drawEnnemi(n){
         }
         if (edition == 0 && figer == 0){
             if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
-            var sens = choseDirection(n);
-            ennemis[n].n = 0;
-            if (sens == 4){
-                ennemis[n].stun = 1;
-            }
-            else ennemis[n].sens = sens;
+            choseDirection(n);
         }
         if (ennemis[n].stop == 0){
             ennemis[n].n += 1;
@@ -912,7 +907,7 @@ function attack(n,x){
         }
         return;
     }
-    if (heros[n].g == 0) {heros[n].g = -0.3; heros[n].z += 0.01;}
+    if (heros[n].g == 0) {heros[n].g = -heros[n].saut; heros[n].z += 0.01;}
     if (x == 1) {
         var use = heros[0].prim;
     }
