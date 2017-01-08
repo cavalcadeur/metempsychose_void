@@ -1,12 +1,12 @@
 function choseDirection(n){
     var choices = 0;
     if (ennemis[n].ia == "herbi"){
-        if (ennemis[n].n < 20) return;
+        if (ennemis[n].n < 30) return;
         var X = Math.round(ennemis[n].x);
         var Y = Math.round(ennemis[n].y);
         if (objNiveau[Y][X][0] == "herbe0" || objNiveau[Y][X][0] == "herbe2"){
             if (ennemis[n].act == 1){
-                if (rnd(100) < 10) ennemis[n].act = 0;
+                if (rnd(100) < 5) ennemis[n].act = 0;
             }
             else {
                 if (rnd(100) < 30) ennemis[n].act = 1;

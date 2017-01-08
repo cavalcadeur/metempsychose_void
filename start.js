@@ -661,8 +661,7 @@ function draw() {
             particles.forEach(
                 function(kgb,iii){
                     if (y == Math.ceil(kgb.y)){
-                        if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
-                        else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
@@ -1501,25 +1500,11 @@ function hitEnnemis(n,degat,sens){
 function hitHeros(n,degat,sens){
     if (heros[n].mortal > 0) return;
     if (degat == -1) return;
-    heros[n].grap = 0;
-    hookShots.splice(heros[n].nGrap,1);
-    if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
-    heros[n].nGrap = -1;
-    heros[n].vx = 0;
-    heros[n].vy = 0;
-    if ((heros[n].y + vecteurs[sens][0]) < niveau.length && heros[n].y + vecteurs[sens][0] >= 0){
-        if ((heros[n].x + vecteurs[sens][1]) < niveau[0].length && heros[n].x + vecteurs[sens][1] >= 0){
-            if (niveau[heros[n].y][heros[n].x] >= niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] && (heros[n].x + vecteurs[sens][1]) < niveau[heros[n].y + vecteurs[sens][0]].length){
-                if (isSolid(heros[n].x + vecteurs[sens][1],heros[n].y + vecteurs[sens][0]) == false){
-                    heros[n].x += vecteurs[sens][1];
-                    heros[n].y += vecteurs[sens][0];
-                }
-            }
-        }
-    }
+    heros[n].Vx = vecteurs[sens][1]*0.2;
+    heros[n].Vy = vecteurs[sens][0]*0.2;
     heros[n].vie -= degat;
-    heros[n].stun = 20;
-    heros[n].mortal = 60;
+    //heros[n].stun = 20;
+    //heros[n].mortal = 60;
 }
 
 function waterLevel(n){

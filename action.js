@@ -19,62 +19,7 @@ function action(t){
                     }
                 }
             }
-            if (h.grap > 0){
-                if (h.grap == 1){
-                    h.grapD += 2;
-                    var gx = h.x + (vecteurs[h.sens][1] * ((h.grapD+10)/10));
-                    var gy = h.y + (vecteurs[h.sens][0] * ((h.grapD+10)/10));
-                    hookShots[heros[n].nGrap].x = gx;
-                    hookShots[heros[n].nGrap].y = gy;
-                    if (h.grapD/10 == Math.floor(h.grapD/10)){
-                        if (gy == niveau.length || gy < 0 || gx < 0 || gx == niveau[0].length){
-                            h.grap = 2;
-                        }
-                        else if (niveau[gy][gx] > h.z) h.grap = 2;
-                        else if (h.grapD > 50) h.grap = 2;
-                        else if (niveau[gy][gx] == Math.floor(h.z)){
-                            if (isSolid(gx,gy) == true) h.grap = 3;
-                        }
-                    }
-                }
-                else if (h.grap == 2){
-                    h.grapD -= 2;
-                    var gx = h.x + (vecteurs[h.sens][1] * ((h.grapD+10)/10));
-                    var gy = h.y + (vecteurs[h.sens][0] * ((h.grapD+10)/10));
-                    hookShots[heros[n].nGrap].x = gx;
-                    hookShots[heros[n].nGrap].y = gy;
-                    if (h.grapD == 0) {
-                        h.grap = 0;
-                        hookShots.splice(h.nGrap,1);
-                        if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
-                        heros[n].nGrap = -1;
-                    }
-                }
-                else if (h.grap == 3){
-                    var gx = h.x + (vecteurs[h.sens][1] * (h.grapD/10));
-                    var gy = h.y + (vecteurs[h.sens][0] * (h.grapD/10));
-                    if (isSolid(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0]) == true){
-                        h.grap = 0;
-                        hookShots.splice(h.nGrap,1);
-                        if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
-                        heros[n].nGrap = -1;
-                    }
-                    else move(h.sens,n,1);
-                }
-                if (h.grap != 0){
-                    var hx = h.x + h.vx/50;
-                    var hy = h.y + h.vy/50;
-                    var cx = (hookShots[h.nGrap].x - hx)/6;
-                    var cy = (hookShots[h.nGrap].y - hy)/6;
-                    hookShots[h.nGrap].chaine.forEach(
-                        function(m,i){
-                            m[0] = hx + cx*(i+1);
-                            m[1] = hy + cy*(i+1);
-                        }
-                    );
-                }
-            }
-            else if (h.vx == 0 && h.vy == 0 && figer == 0){
+            if (figer == 0){
                 var supress = 1;
                 if (objNiveau[Math.round(h.y)][Math.round(h.x)][0] != "" && isSolid(Math.round(h.y),Math.round(h.x)) == false){
                     var truc = objNiveau[Math.round(h.y)][Math.round(h.x)];
@@ -163,7 +108,7 @@ function action(t){
                 function(e){
                     if (e.pv == 0) return;
                     if (Math.round(h.x) == Math.round(e.x) && Math.round(h.y) == Math.round(e.y)){
-                        var Sens = e.sens;
+                        var Sens = (heros[n].sens+2)%4;
                         if (e.img == "main") {
                             goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
                             particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
