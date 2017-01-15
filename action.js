@@ -105,23 +105,18 @@ function action(t){
                 }
             }
             ennemis.forEach(
-                function(e){
+                function(e,I){
                     if (e.pv == 0) return;
-                    if (Math.round(h.x) == Math.round(e.x) && Math.round(h.y) == Math.round(e.y)){
-                        var Sens = (heros[n].sens+2)%4;
-                        if (e.img == "main") {
-                            goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
-                            particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
-                        }
-                        else hitHeros(n,e.att,Sens);
+                    if (Math.round(h.x) == Math.round(e.x) && Math.round(h.y) == Math.round(e.y) && Math.round(h.z) == Math.round(e.z)){
+                        metempsy(I);
                     }
                 }
             );
             if (h.plane == 1){
-                if (h.z > niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0])) h.g = 0.01;
+                if (h.z > getAlti(Math.round(h.x),Math.round(h.y))) h.g = 0.01;
                 else {
                     h.g = 0;
-                    h.z = niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]);
+                    h.z = getAlti(Math.round(h.x),Math.round(h.y));
                     h.plane = 0;
                     h.imgUp = 0;
                     h.imgN = 0;
@@ -133,10 +128,10 @@ function action(t){
 
             }
             else if (h.grap == 0){
-                if ( (h.z > niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]) && h.g < 5)) h.g += 0.02;
+                if ( (h.z > getAlti(Math.round(h.x),Math.round(h.y)) && h.g < 5)) h.g += 0.02;
                 else {
                     h.g = 0;
-                    h.z = niveau[Math.round(h.y)][Math.round(h.x)] + taille(objNiveau[Math.round(h.y)][Math.round(h.x)][0]);
+                    h.z = getAlti(Math.round(h.x),Math.round(h.y));
                     if (h.z <= -1){
                         fall(h,n);
                     }
@@ -221,7 +216,7 @@ function move(d,n,gg){
             }
         }
     }
-    if (heros[n].z < niveau[deY][deX] + taille(truc[0])){
+    if (heros[n].z < getAlti(deX,deY)){
         if (truc[0] == "rocher"){
             var YY = heros[n].y+vecteurs[d][0];
             var XX = heros[n].x+vecteurs[d][1];
@@ -283,4 +278,18 @@ function taille(caseT){
     var tailles = {"arbre0":5};
     if (tailles[caseT] == undefined) return 0;
     else return tailles[caseT];
+}
+
+
+function metempsy(i){
+    particles.push({n:0,type:"metem",x:heros[0].x,y:heros[0].y,g:0,alti:heros[0].z,lim:50});
+    ennemis[i].pv = 0;
+    imgHeros[0].src = "images/ennemis/"+ennemis[i].img+"0.png";
+    imgHeros[1].src = "images/ennemis/"+ennemis[i].img+"4.png";
+    imgHeros[2].src = "images/ennemis/"+ennemis[i].img+"5.png";
+    imgHeros[3].src = "images/ennemis/"+ennemis[i].img+"6.png";
+    heros[0].invent[0] = ennemis[i].capa;
+    heros[0].inertie = ennemis[i].inertie;
+    heros[0].vitesse = ennemis[i].vitesse;
+    heros[0].saut = ennemis[i].saut;
 }

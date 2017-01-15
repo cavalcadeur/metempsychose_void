@@ -12,6 +12,12 @@ function choseDirection(n){
                 if (rnd(100) < 30) ennemis[n].act = 1;
             }
         }
+        else{
+            var didi = rnd(4);
+            if (Math.round(getAlti(ennemis[n].x)+vecteurs[didi][1]*ennemis[n].vitesse),Math.round(ennemis[n].y+vecteurs[didi][0]*ennemis[n].vitesse) == Math.round(ennemis[n].z)){
+                
+            }
+        }
     }
     ennemis[n].n = 0;
 }
@@ -45,7 +51,7 @@ function vueIA(guy){
 
 function getAlti(x,y){
     if (x < 0 || y < 0 || y >= niveau.length || x >= niveau[0].length){
-        return 6666666;
+        return -1;
     }
     else {
         return (niveau[y][x] + taille(objNiveau[y][x]));

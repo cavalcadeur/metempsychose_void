@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":5,"y":4,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"inertie":0.02,"Vx":0,Vy:0,"vitesse":0.1,"saut":0.3}];
+var heros = [{"x":5,"y":4,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"inertie":0.02,"Vx":0,Vy:0,"vitesse":0.1,"saut":0}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -233,11 +233,11 @@ function precharge(){
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
     var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","excla","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla"];
-    var imgInterface = ["blank"];
+    var imgInterface = ["blank","shout"];
     var imgRubis = ["rubisVert"];
     var imgPNJ = ["lambda0"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*2) + imgPNJ.length + nDalle;
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + debris.length + coeur.length + (imgEnnemi.length*2) + imgPNJ.length + nDalle;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -291,16 +291,6 @@ function charge(){
             imgMenu[e] = new Image();
             imgMenu[e].src = "images/interface/" + e + ".png";
             imgMenu[e].onload = function(){
-                chargement -= 1;
-                if (chargement == 0) animation();
-            };
-        }
-    );
-    imgInterface.forEach(
-        function(e,i){
-            imgElement[e] = new Image();
-            imgElement[e].src = "images/elements/armes/" + e + ".png";
-            imgElement[e].onload = function(){
                 chargement -= 1;
                 if (chargement == 0) animation();
             };
@@ -454,10 +444,6 @@ function start(){
                 if (onSea == 1) onSea = 2;
                 else if (onSea == 2) onSea = 1;
             }
-            else if (event.keyCode == 73) {
-                if (onSea == 0) goInvent();
-                else if (onSea == 4) endInvent();
-            }
             else if (event.keyCode == 65){
                 if (edition == 1){
                     edition = 0;
@@ -504,12 +490,14 @@ function animation(){
                 Crossed.drawMenu(ctx,W,H);
             }
             else{
-                if (onSea == 0) {action(t); draw();}
-                else if (onSea == 1)sail(t);
-                else if (onSea == 2) drawSea();
-                else if (onSea == 4) drawInvent();
-                else if (onSea == 5) TPisland();
-                else if (onSea == 6) Help();
+                try{
+                    if (onSea == 0) {action(t); draw();}
+                    else if (onSea == 1)sail(t);
+                    else if (onSea == 2) drawSea();
+                    else if (onSea == 4) drawInvent();
+                    else if (onSea == 5) TPisland();
+                    else if (onSea == 6) Help();
+                } catch(e){console.error(e);}
                 if (cinematicos == 0) window.requestAnimationFrame(f);
                 else {
                     animation();
@@ -662,7 +650,7 @@ function draw() {
                 function(kgb,iii){
                     if (y == Math.ceil(kgb.y)){
                         if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                        else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "metem") {drawMetem(kgb);kgb.g = 0;}
                         else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
                         else if (kgb.type == "excla") {drawExcla(kgb);kgb.g = 0;}

@@ -26,12 +26,16 @@ var Painter = function() {
         return (-8*(n*n*n) + 12.67*(n*n) - 4.67*n)*50;
     }
 
+    function metemN(n){
+        return (-0.1*n*n+5*n);
+    }
+
     return {
         realCoor: function(x,y){
             return [toX(x,y,1),toY(x,y,1)];
         },
         niveau: function( level ) {
-			editNumber = 1;
+            editNumber = 1;
             var rows = level.length;
             var cols = level[0].length;
             walls = [];
@@ -114,14 +118,14 @@ var Painter = function() {
             scrollX = Math.floor(W/2 - x*cellX + y*cellS);
             scrollY = Math.floor(H/2 - H/3 - y*cellY + z*cellZ);
             if (scrollY < 0) scrollY = 0;
-         },
-        
+        },
+
         scrollYPlus: function(a) {
             scrollY += a;
         },
 
         drawQuake: function( n ) {
-	    scrollX += Math.sin(n)*10;
+            scrollX += Math.sin(n)*10;
         },
 
         drawChain: function(ctx,x,y,x2,y2,z) {
@@ -177,7 +181,7 @@ var Painter = function() {
             ctx.scale(s,1);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
-        },       
+        },
         imgScaleTot: function( ctx, x, y, z, s, img ) {
             if( !img ) return;
 
@@ -198,40 +202,40 @@ var Painter = function() {
 
             ctx.save();
             ctx.translate(X+12,Y);
-	    ctx.rotate(r);
+            ctx.rotate(r);
             ctx.scale(s,1);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
 
         cell: function( ctx, x, y, z ,n , nivel) {
-     
+
             //-----------------------------------------------------------------
-            
-			if( typeof nivel === 'undefined' ) nivel = niveau; 
+
+            if( typeof nivel === 'undefined' ) nivel = niveau;
             if( z > -1 ) {
                 var X = toX( x, y, z );
                 var Y = toY( x, y, z );
-                	// Partie frontale (verticale)
-                	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
-                    	ctx.fillStyle = colorSet[out][0];
-                    	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
-                	}
-                	// Partie latérale (verticale)
-                	if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
-                    	ctx.fillStyle = colorSet[out][1];
-                    	ctx.beginPath();
-                    	ctx.moveTo( X + cellX, Y );
-                    	ctx.lineTo( X + cellX + cellS, Y - cellY );
-                    	ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
-                    	ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
-                    	ctx.closePath();
-                    	ctx.fill();
-                	}			
+                // Partie frontale (verticale)
+                if  (y == nivel.length - 1 || z > nivel[y+1][x]){
+                    ctx.fillStyle = colorSet[out][0];
+                    ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
+                }
+                // Partie latérale (verticale)
+                if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
+                    ctx.fillStyle = colorSet[out][1];
+                    ctx.beginPath();
+                    ctx.moveTo( X + cellX, Y );
+                    ctx.lineTo( X + cellX + cellS, Y - cellY );
+                    ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
+                    ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
+                    ctx.closePath();
+                    ctx.fill();
+                }
 
                 // Partie horizontale.
                 ctx.fillStyle = "rgb("+(colorSet[out][2][0]+z*colorSet[out][2][3])+","+(colorSet[out][2][1]+z*colorSet[out][2][4])+","+(colorSet[out][2][2]+z*colorSet[out][2][5])+")";
-				if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
+                if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
                 ctx.moveTo( X, Y );
                 ctx.lineTo( X + cellX + 1, Y );
@@ -239,8 +243,8 @@ var Painter = function() {
                 ctx.lineTo( X + cellS, Y - cellY );
                 ctx.closePath();
                 ctx.fill();
-				
-				if (n == 1) return;
+
+                if (n == 1) return;
 
                 ctx.strokeStyle = colorSet[out][4];
                 ctx.lineWidth = 2;
@@ -386,6 +390,22 @@ var Painter = function() {
             ctx.arc(X,Y,n*2,Math.PI,-Math.PI);
             ctx.fill();
             ctx.globalAlpha = 1;
+        },
+        drawMetem: function(ctx,kg){
+            ctx.fillStyle = "rgb(50,0,100)";
+            var x = kg.x;
+            var y = kg.y;
+            var z = kg.alti;
+            var X = toX(x+0.5,y+0.5,z+2);
+            var Y = toY(x+0.5,y+0.5,z+2);
+            for (var i = 0;i<12;i++){
+                ctx.beginPath();
+                ctx.moveTo((X+Math.cos(Math.PI/4*i)*metemN(kg.n)) ,(Y-Math.sin(Math.PI/4*i)*metemN(kg.n)));
+                ctx.lineTo(X+Math.cos(Math.PI/4*i)*(metemN(kg.n+5))+5*Math.sin(Math.PI/4*i),Y-Math.sin(Math.PI/4*i)*(metemN(kg.n+5))+5*Math.cos(Math.PI/4*i));
+                ctx.lineTo(X+Math.cos(Math.PI/4*i)*(metemN(kg.n+5))-5*Math.sin(Math.PI/4*i),Y-Math.sin(Math.PI/4*i)*(metemN(kg.n+5))-5*Math.cos(Math.PI/4*i));
+                ctx.closePath();
+                ctx.fill();
+            }
         },
         drawTexte: function(ctx,x,y,z,texte){
             ctx.fillStyle = "rgb(230,230,255)";

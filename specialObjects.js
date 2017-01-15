@@ -188,3 +188,7 @@ function drawSpire(truc){
         goToLevel(1,"depart",heros[0].x,heros[0].y);
     }
 }
+
+function drawMetem(kg){
+    Painter.drawMetem(ctx,kg);
+}
