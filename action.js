@@ -21,65 +21,67 @@ function action(t){
             }
             if (figer == 0){
                 var supress = 1;
-                if (objNiveau[Math.round(h.y)][Math.round(h.x)][0] != "" && isSolid(Math.round(h.y),Math.round(h.x)) == false){
-                    var truc = objNiveau[Math.round(h.y)][Math.round(h.x)];
-                    if (truc[0] == "rubisVert"){
-                        h.rubis += 1;
-                        supress = 0;
-                    }
-                    else if (truc[0] == "rubisBleu"){
-                        h.rubis += 5;
-                        supress = 0;
-                    }
-                    else if (truc[0] == "rubisRouge"){
-                        h.rubis += 20;
-                        supress = 0;
-                    }
-                    else if (truc[0] == "plate"){
-                        if (truc[3] == "") objNiveau[truc[2]][truc[1]] = [""];
-                        else if (truc[3] == 1 || truc[3] == -1){
-                            niveau[truc[2]][truc[1]] += truc[3];
-                            Painter.niveau(niveau);
+                if (Math.round(h.y) > 0 && Math.round(h.x) > 0 && Math.round(h.y) < niveau.length && Math.round(h.x) < niveau[0].length){
+                    if (objNiveau[Math.round(h.y)][Math.round(h.x)][0] != "" && isSolid(Math.round(h.y),Math.round(h.x)) == false){
+                        var truc = objNiveau[Math.round(h.y)][Math.round(h.x)];
+                        if (truc[0] == "rubisVert"){
+                            h.rubis += 1;
+                            supress = 0;
                         }
-                        else if (truc[3] == "monstre"){
-                            ennemis.push(monstreType(truc[4],truc[1],truc[2]));
+                        else if (truc[0] == "rubisBleu"){
+                            h.rubis += 5;
+                            supress = 0;
                         }
-                        else {
-                            for (var i = truc.length-1;i>2;i--){
-                                objNiveau[truc[2]][truc[1]].splice(0,0,truc[i]);
+                        else if (truc[0] == "rubisRouge"){
+                            h.rubis += 20;
+                            supress = 0;
+                        }
+                        else if (truc[0] == "plate"){
+                            if (truc[3] == "") objNiveau[truc[2]][truc[1]] = [""];
+                            else if (truc[3] == 1 || truc[3] == -1){
+                                niveau[truc[2]][truc[1]] += truc[3];
+                                Painter.niveau(niveau);
+                            }
+                            else if (truc[3] == "monstre"){
+                                ennemis.push(monstreType(truc[4],truc[1],truc[2]));
+                            }
+                            else {
+                                for (var i = truc.length-1;i>2;i--){
+                                    objNiveau[truc[2]][truc[1]].splice(0,0,truc[i]);
+                                }
+                            }
+                            truc[0] = "plate1";
+                        }
+                        else if (truc[0] == "coeur"){
+                            if (h.vie + 1 <= h.vieTotale){
+                                h.vie += 1;
+                            }
+                            else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
+                            supress = 0;
+                        }
+                        else if (truc[0] == "cle0"){
+                            h.cles += 1;
+                            supress = 0;
+                        }
+                        else if (truc[0] == "teleport"){
+                            teleport = [h.y,h.x];
+                            goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
+                        }
+                        else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot" || truc[0] == "parachale" || truc[0] == "baton"){
+                            if (truc[0] == "boomerang") {addObj(truc[0],n);}
+                            else donnerHeros(truc[0],n);
+                            supress = 0;
+                        }
+                        else if (truc[0] == "avaleur1"){
+                            if (h.z == niveau[Math.round(h.y)][Math.round(h.x)]){
+                                h.stun = 10020;
+                                objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "avaleur2";
                             }
                         }
-                        truc[0] = "plate1";
-                    }
-                    else if (truc[0] == "coeur"){
-                        if (h.vie + 1 <= h.vieTotale){
-                            h.vie += 1;
+                        if (supress == 0){
+                            if (truc.length > 1) objNiveau[Math.round(h.y)][Math.round(h.x)].splice(0,1);
+                            else objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "";
                         }
-                        else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
-                        supress = 0;
-                    }
-                    else if (truc[0] == "cle0"){
-                        h.cles += 1;
-                        supress = 0;
-                    }
-                    else if (truc[0] == "teleport"){
-                        teleport = [h.y,h.x];
-                        goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
-                    }
-                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot" || truc[0] == "parachale" || truc[0] == "baton"){
-                        if (truc[0] == "boomerang") {addObj(truc[0],n);}
-                        else donnerHeros(truc[0],n);
-                        supress = 0;
-                    }
-                    else if (truc[0] == "avaleur1"){
-                        if (h.z == niveau[Math.round(h.y)][Math.round(h.x)]){
-                            h.stun = 10020;
-                            objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "avaleur2";
-                        }
-                    }
-                    if (supress == 0){
-                        if (truc.length > 1) objNiveau[Math.round(h.y)][Math.round(h.x)].splice(0,1);
-                        else objNiveau[Math.round(h.y)][Math.round(h.x)][0] = "";
                     }
                 }
 
@@ -143,38 +145,35 @@ function action(t){
 }
 
 function fall(h,n){
-    var truc = objNiveau[Math.round(heros[n].y)][Math.round(heros[n].x)];
-    if (truc != "avaleur1" && truc != "avaleur2"){
-        if (out == 1 || out == 3){
-            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
-            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
-        }
-        else if (out == 2){
-            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
-            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
-        }
-        if (niveau[respawnPoint[1]][respawnPoint[0]] < 0){
-            var xxx = 0;
-            while (niveau[respawnPoint[1]][respawnPoint[0]] < 0){
-                xxx += 1;
-                respawnPoint[0] += 1;
-                if (respawnPoint[0] == niveau[0].length) {
-                    respawnPoint[0] = 0;
-                    respawnPoint[1] += 1;
-                    if (respawnPoint[1] == niveau.length) {
-                        respawnPoint[1] = 0;
-                    }
-                }
-                if (xxx == 500){
-                    niveau[respawnPoint[1]][respawnPoint[0]] = 0;
+    if (out == 1 || out == 3){
+        particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
+        particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+    }
+    else if (out == 2){
+        particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
+        particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+    }
+    if (niveau[respawnPoint[1]][respawnPoint[0]] < 0){
+        var xxx = 0;
+        while (niveau[respawnPoint[1]][respawnPoint[0]] < 0){
+            xxx += 1;
+            respawnPoint[0] += 1;
+            if (respawnPoint[0] == niveau[0].length) {
+                respawnPoint[0] = 0;
+                respawnPoint[1] += 1;
+                if (respawnPoint[1] == niveau.length) {
+                    respawnPoint[1] = 0;
                 }
             }
+            if (xxx == 500){
+                niveau[respawnPoint[1]][respawnPoint[0]] = 0;
+            }
         }
-        heros[n].x = respawnPoint[0];
-        heros[n].y = respawnPoint[1];
-        heros[n].stun = 20;
-        heros[n].mortal = 60;
     }
+    heros[n].x = respawnPoint[0];
+    heros[n].y = respawnPoint[1];
+    heros[n].stun = 20;
+    heros[n].mortal = 60;
 }
 
 function move(d,n,gg){
@@ -186,59 +185,52 @@ function move(d,n,gg){
     var deY = Math.round(heros[n].y + dy);
     heros[n].Vx = 0;
     heros[n].Vy = 0;
-    if (deX == niveau[0].length || deX == -1 || deY == niveau.length || deY == -1) return;
-    var truc = objNiveau[deY][deX];
-    if (heros[n].sens == 0){
-        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
-            teleport = [deY,deX];
-            if (objNiveau[deY][deX][1] == "void"){
-                goToLevel(out,"void",0,0,0,0);
-            }
-            else {
-                goto = objNiveau[deY][deX][1];
-                if (objNiveau[deY][deX][2] == 666){
-                    out = 1;
-                    cinematicos = 2;
-                    goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
-                }
-                else if (interieurs[goto] == undefined){
-                    out = 1;
-                    goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+    if (deX < niveau[0].length && deX > -1 && deY < niveau.length && deY > -1){
+        var truc = objNiveau[deY][deX];
+        if (heros[n].sens == 0){
+            if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
+                teleport = [deY,deX];
+                if (objNiveau[deY][deX][1] == "void"){
+                    goToLevel(out,"void",0,0,0,0);
                 }
                 else {
-                    out = interieurs[goto].out;
-                    goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
+                    goto = objNiveau[deY][deX][1];
+                    if (objNiveau[deY][deX][2] == 666){
+                        out = 1;
+                        cinematicos = 2;
+                        goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+                    }
+                    else if (interieurs[goto] == undefined){
+                        out = 1;
+                        goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+                    }
+                    else {
+                        out = interieurs[goto].out;
+                        goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
+                    }
+                    if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
                 }
-                if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
-            }
-            if (truc[0] == "canon1"){
-                cinematicos = 3;
+                if (truc[0] == "canon1"){
+                    cinematicos = 3;
+                }
             }
         }
     }
     if (heros[n].z < getAlti(deX,deY)){
-        if (truc[0] == "rocher"){
-            var YY = heros[n].y+vecteurs[d][0];
-            var XX = heros[n].x+vecteurs[d][1];
-            if (objNiveau[YY][XX].length == 1 ) objNiveau[YY][XX][0] = "";
-            else objNiveau[YY][XX].splice(0,1);
-            particles.push({n:0,type:"rocher",x:XX,y:YY,g:0,alti:niveau[YY][XX],lim:-5,sens:heros[n].sens,endu:1});
-            heros[n].stun = 3;
-        }
         return;
     }
     //}
     heros[n].x +=  dx;
     heros[n].y +=  dy;
     if (heros[n].etat == 1 && heros[n].g == 0) {heros[n].g = -0.20; heros[n].z += 0.01;}
-    
+
     if (inert[0] > 0) heros[n].Vx = inert[0] - heros[n].inertie;
     else if (inert[0] < 0) heros[n].Vx = inert[0] + heros[n].inertie;
     if (Math.abs(inert[0]) < heros[n].inertie) heros[n].Vx = 0;
     if (inert[1] > 0) heros[n].Vy = inert[1] - heros[n].inertie;
     else if (inert[1] < 0) heros[n].Vy = inert[1] + heros[n].inertie;
     if (Math.abs(inert[1]) < heros[n].inertie) heros[n].Vy = 0;
-    
+
     Painter.scrolling();
 }
 
@@ -284,9 +276,9 @@ function taille(caseT){
 function metempsy(i){
     particles.push({n:0,type:"metem",x:heros[0].x,y:heros[0].y,g:0,alti:heros[0].z,lim:50});
     ennemis[i].pv = 0;
-    imgHeros[0].src = "images/ennemis/"+ennemis[i].img+"0.png";
-    imgHeros[1].src = "images/ennemis/"+ennemis[i].img+"4.png";
-    imgHeros[2].src = "images/ennemis/"+ennemis[i].img+"5.png";
+    imgHeros[2].src = "images/ennemis/"+ennemis[i].img+"0.png";
+    imgHeros[0].src = "images/ennemis/"+ennemis[i].img+"4.png";
+    imgHeros[1].src = "images/ennemis/"+ennemis[i].img+"5.png";
     imgHeros[3].src = "images/ennemis/"+ennemis[i].img+"6.png";
     heros[0].invent[0] = ennemis[i].capa;
     heros[0].inertie = ennemis[i].inertie;

@@ -533,6 +533,7 @@ function draw() {
             }
         );
     }
+    if (Math.round(heros[0].y) < 0) drawHeros(0);
     niveau.forEach(
         function(e,y){
             e.forEach(
@@ -696,6 +697,7 @@ function draw() {
             );
         }
     );
+    if (Math.round(heros[0].y) >= niveau.length) drawHeros(0);
     if (edition == 1 && casePencil[1] != "ah") {
         ctx.globalAlpha = 0.2;
         Painter.cell( ctx, casePencil[1], casePencil[0], niveau[casePencil[0]][casePencil[1]] ,1);
